@@ -60,6 +60,14 @@ import from Git), which auto-detects `next build`/`next start` from this repo's
 `package.json` — `server.js` below is for the alternate manual Passenger "Node.js"
 app type only and is unused on this deploy path.
 
+The build uses `output: "standalone"` (see `next.config.ts`) so the deploy only
+needs the files each route actually traces, not the full `node_modules` install.
+`npm run build` automatically runs `postbuild` (`scripts/copy-standalone-assets.js`)
+to copy `public/` and `.next/static` into `.next/standalone/`, after which
+`npm run start:standalone` (`node .next/standalone/server.js`) can serve the app
+on its own. `next start` (the plain `start` script) still works unchanged against
+the regular `.next` build if a given host doesn't use the standalone bundle.
+
 ## Production build (Hostinger Business — Node.js Web App, manual Passenger app)
 
 This app runs as a plain Node.js process under Hostinger's Passenger-based Node.js
