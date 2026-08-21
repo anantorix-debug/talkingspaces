@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // Deploys via server.js (a custom server) on Hostinger's Passenger-based
+  // Node.js hosting, run against the full node_modules install — not the
+  // ".next/standalone" bundle, which needs extra copy steps for a custom
+  // server and for Prisma's native query engine binary to be traced correctly.
   experimental: {
     serverActions: {
       // Image uploads go through a Server Action (see app/actions/admin/upload.ts);

@@ -44,8 +44,9 @@ See `.env.example` for the full list. Notably:
 - `NEXT_PUBLIC_SITE_URL` — used for canonical URLs, sitemap, and Open Graph metadata.
 - `WHATSAPP_NUMBER`, `SOCIAL_INSTAGRAM`, `SOCIAL_FACEBOOK` — not used at runtime.
   Contact/social details and the homepage hero/studio images are hardcoded in
-  `lib/constants.ts` (`SITE_CONFIG`) by design — there is no admin Settings page;
-  update that file and redeploy to change them.
+  `lib/constants.ts` (`SITE_CONFIG`) by design — the admin Settings page only
+  covers each user's own password, not site content; update that file and
+  redeploy to change these.
 - `MEDIA_STORAGE_DRIVER` / `MEDIA_STORAGE_PATH` — local disk storage config (see
   `lib/storage/`). Adding another backend later means adding a new `StorageProvider`
   implementation, not rewriting call sites.
@@ -54,20 +55,35 @@ Never commit `.env`.
 
 ## Production build (Hostinger Business — Node.js Web App)
 
-This app runs as a plain Node.js process — no Vercel-only features, no Docker, no
-serverless assumptions.
+This app runs as a plain Node.js process under Hostinger's Passenger-based Node.js
+hosting — no Vercel-only features, no Docker, no serverless assumptions.
 
 - **Node version:** 20 LTS or newer.
-- **Install:** `npm install` (runs `prisma generate` automatically via `postinstall`).
-- **Migrate:** `npx prisma migrate deploy` against the production `DATABASE_URL`
-  (run once per deploy, before the app serves traffic).
-- **Build:** `npm run build` (Next.js `output: "standalone"`).
-- **Start:** `npm start`.
-- Ensure `storage/uploads` (or your configured `MEDIA_STORAGE_PATH`) is a writable,
-  persistent directory on the host — it is not part of the build output and must
+- In hPanel: **Websites → (your site) → Setup**, choose the **Node.js** website
+  type, set the Node version, application root (where the repo is deployed),
+  and set the **Application startup file** to `server.js` (Passenger requires a
+  plain entry file listening on `process.env.PORT` — it does not run `npm start`
+  for you; that's what `server.js` at the project root does).
+- Deploy the code via hPanel's Git integration (Websites → your site → Git) or
+  `git clone`/`git pull` over SSH, pointed at this repo.
+- Create a MySQL database + user in hPanel (**Databases → MySQL Databases**)
+  and build `DATABASE_URL` from it.
+- Set all variables from `.env.example` (with production values —
+  `NEXTAUTH_URL`/`NEXT_PUBLIC_SITE_URL` as the real `https://` domain) in the
+  Node.js app's environment variables panel in hPanel; do not rely on a
+  committed `.env` file in production.
+- **Install:** `npm install` (runs `prisma generate` automatically via
+  `postinstall`) — via hPanel's "NPM Install" button or over SSH.
+- **Migrate:** `npx prisma migrate deploy` against the production
+  `DATABASE_URL` (run once per deploy, before the app serves traffic).
+- **Build:** `npm run build`.
+- **Start:** handled by Passenger via the configured startup file
+  (`server.js`); restart from hPanel after each deploy. To test manually over
+  SSH: `npm run start:prod`.
+- Ensure `storage/uploads` (or your configured `MEDIA_STORAGE_PATH`) is a
+  writable, persistent directory on the host, outside the path a Git
+  pull/deploy would overwrite — it is not part of the build output and must
   survive redeploys.
-- Set all variables from `.env.example` in the hosting panel's environment
-  configuration; do not rely on a committed `.env` file in production.
 
 ## Legacy URL compatibility
 
@@ -99,5 +115,6 @@ Next.js equivalents at the clean URLs (`/about`, `/portfolio`, `/contact`,
 - **Leads are unified.** The Contact page form and the Request-a-Consultation
   modal both write to a single `Lead` model (`type: ENQUIRY | CONSULTATION`),
   managed from one "Leads" screen instead of two.
-- **No SEO admin / no Settings admin**, by design — see the environment variables
-  section above.
+- **No SEO admin, no site-content Settings admin** — see the environment
+  variables section above. The admin Settings page (`/admin/settings`) only
+  lets a signed-in user change their own password.
