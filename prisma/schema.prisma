@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum RoleName {
+  MASTER_ADMIN
+  ADMIN
+  EDITOR
+}
+
+enum ContentStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  UNPUBLISHED
+}
+
+enum LeadType {
+  ENQUIRY
+  CONSULTATION
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  WON
+  LOST
+  ARCHIVED
+}
+
+// ---------------------------------------------------------------------------
+// Auth / Users
+// ---------------------------------------------------------------------------
+
+model Role {
+  id    Int      @id @default(autoincrement())
+  name  RoleName @unique
+  users User[]
+
+  @@map("roles")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  roleId       Int
+  role         Role     @relation(fields: [roleId], references: [id])
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  createdProjects Project[] @relation("ProjectCreatedBy")
+
+  @@index([roleId])
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------------
+// Category — the base for the public "Our Services" page. Project
+// (Portfolio) is not connected to Category at all. Service holds only the
+// extra marketing content for a category's service page (1:1, optional).
+// ---------------------------------------------------------------------------
+
+model ProjectCategory {
+  id          Int           @id @default(autoincrement())
+  name        String
+  slug        String        @unique
+  description String?       @db.Text
+  status      ContentStatus @default(PUBLISHED)
+  sortOrder   Int           @default(0)
+  service     Service?
+
+  @@map("project_categories")
+}
+
+// imageUrl is a single cover photo (no gallery/multi-image table). beforeImage/
+// afterImage are optional child content of a Project — same pattern as
+// Category/Service. A Project appears on the public Before & After page when
+// both are set; there is no separate Before & After model.
+model Project {
+  id               String        @id @default(cuid())
+  title            String
+  slug             String        @unique
+  shortDescription String        @db.Text
+  description      String        @db.Text
+  imageUrl         String?       @db.Text
+  location         String?
+  year             Int?
+  featured         Boolean       @default(false)
+  beforeImage      String?       @db.Text
+  afterImage       String?       @db.Text
+  status           ContentStatus @default(DRAFT)
+  sortOrder        Int           @default(0)
+  createdById      String?
+  createdBy        User?         @relation("ProjectCreatedBy", fields: [createdById], references: [id])
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([status, featured])
+  @@map("projects")
+}
+
+// ---------------------------------------------------------------------------
+// Services — child content of a ProjectCategory (see note above).
+// ---------------------------------------------------------------------------
+
+/** Child of ProjectCategory — the category's own status governs visibility for both. */
+model Service {
+  id               String          @id @default(cuid())
+  categoryId       Int             @unique
+  category         ProjectCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  shortDescription String          @db.Text
+  description      String          @db.Text
+  heroImage        String?         @db.Text
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@map("services")
+}
+
+// ---------------------------------------------------------------------------
+// Testimonials
+// ---------------------------------------------------------------------------
+
+model Testimonial {
+  id        String        @id @default(cuid())
+  name      String
+  location  String?
+  content   String        @db.Text
+  image     String?       @db.Text
+  status    ContentStatus @default(DRAFT)
+  sortOrder Int           @default(0)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("testimonials")
+}
+
+// ---------------------------------------------------------------------------
+// Leads — one unified inbox for both the Contact page form (ENQUIRY) and the
+// Request-a-Consultation modal (CONSULTATION); the type field discriminates
+// which optional fields are meaningful (projectType/budget are CONSULTATION-only).
+// ---------------------------------------------------------------------------
+
+model Lead {
+  id          String     @id @default(cuid())
+  type        LeadType
+  name        String
+  phone       String
+  email       String?
+  message     String?    @db.Text
+  projectType String?
+  location    String?
+  budget      String?
+  source      String?
+  status      LeadStatus @default(NEW)
+  notes       String?    @db.Text
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([type, status])
+  @@map("leads")
+}
