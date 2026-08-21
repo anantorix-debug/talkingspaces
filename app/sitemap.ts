@@ -3,6 +3,8 @@ import { getPublishedProjects } from "@/lib/repositories/projects";
 import { getPublishedServices, type PublicServiceData } from "@/lib/repositories/services";
 import type { Project } from "@prisma/client";
 
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
