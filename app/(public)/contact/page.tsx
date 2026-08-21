@@ -14,6 +14,8 @@ export const metadata: Metadata = {
     "Get in touch with Talking Spaces Interiors — Bangalore and Salem studios. Send an enquiry and we'll respond shortly.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default function ContactPage() {
   return (
     <>
