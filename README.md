@@ -53,7 +53,14 @@ See `.env.example` for the full list. Notably:
 
 Never commit `.env`.
 
-## Production build (Hostinger Business — Node.js Web App)
+## Production build (Hostinger Business — Web Apps, Git-deployed)
+
+Deployed via hPanel's "Web Apps" Next.js preset (Websites → your site → Web Apps →
+import from Git), which auto-detects `next build`/`next start` from this repo's
+`package.json` — `server.js` below is for the alternate manual Passenger "Node.js"
+app type only and is unused on this deploy path.
+
+## Production build (Hostinger Business — Node.js Web App, manual Passenger app)
 
 This app runs as a plain Node.js process under Hostinger's Passenger-based Node.js
 hosting — no Vercel-only features, no Docker, no serverless assumptions.
