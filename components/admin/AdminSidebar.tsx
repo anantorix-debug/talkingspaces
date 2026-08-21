@@ -11,6 +11,7 @@ import {
   Quote,
   Inbox,
   Users,
+  Settings,
 } from "lucide-react";
 
 const NAV_SECTIONS: { title: string; items: { label: string; href: string; icon: typeof LayoutDashboard; masterOnly?: boolean }[] }[] = [
@@ -32,7 +33,10 @@ const NAV_SECTIONS: { title: string; items: { label: string; href: string; icon:
   },
   {
     title: "System",
-    items: [{ label: "Users", href: "/admin/users", icon: Users, masterOnly: true }],
+    items: [
+      { label: "Users", href: "/admin/users", icon: Users, masterOnly: true },
+      { label: "Settings", href: "/admin/settings", icon: Settings },
+    ],
   },
 ];
 

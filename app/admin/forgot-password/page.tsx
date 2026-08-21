@@ -13,7 +13,9 @@ export default function ForgotPasswordPage() {
         <h1 className="text-lg font-semibold text-gray-900">Forgot your password?</h1>
         <p className="mt-3 text-sm text-gray-600">
           This admin panel doesn&apos;t have automated email-based password resets set up.
-          Ask your Master Admin to reset your password for you from the Users page.
+          If you remember your current password, sign in and update it from
+          Settings. Otherwise, ask your Master Admin to reset it for you from
+          the Users page.
         </p>
         <Link href="/admin/login" className="mt-6 inline-block text-sm font-medium text-gray-900 underline">
           Back to login
