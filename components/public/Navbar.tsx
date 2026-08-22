@@ -13,9 +13,9 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-charcoal/10 bg-paper">
-      <nav className="mx-auto flex h-[88px] max-w-[1440px] items-center justify-between px-6 lg:px-16">
+      <nav className="mx-auto flex h-[136px] max-w-[1440px] items-center justify-between px-6 lg:px-16">
         <div className="flex shrink-0 items-center gap-2">
-          <Logo priority className="h-20 w-auto" />
+          <Logo priority className="h-28 w-auto" />
           <span className="hidden whitespace-nowrap text-xs font-semibold uppercase tracking-[0.15em] text-teal lg:inline">
             Talking Spaces
           </span>
