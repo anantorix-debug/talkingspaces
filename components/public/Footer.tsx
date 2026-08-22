@@ -13,7 +13,7 @@ export async function Footer() {
       <div className="mx-auto grid max-w-[1440px] gap-12 px-6 py-20 sm:grid-cols-2 lg:grid-cols-4 lg:px-16">
         <div>
           <div className="flex items-center gap-2">
-            <Logo dark className="h-16 w-auto" />
+            <Logo dark className="h-24 w-auto" />
             <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-[0.2em] text-teal-light">
               Talking Spaces
             </span>
