@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // Next's standalone output (see next.config.ts) doesn't include `public/` or
 // `.next/static` by default — copy them in so `.next/standalone/server.js`
 // can serve the app on its own, without the rest of the repo present.

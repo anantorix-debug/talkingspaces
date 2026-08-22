@@ -25,6 +25,11 @@ async function main() {
     },
   });
 
+  if (process.env.NODE_ENV === "production") {
+    console.log("Production seed: roles + admin account only, skipping sample content.");
+    return;
+  }
+
   // --- Categories + their Service page content (Category is the parent) ------
   const categoryDefs = [
     {
