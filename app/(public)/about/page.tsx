@@ -23,7 +23,7 @@ const PROCESS_STEPS = [
 
 const TEAM = [
   { name: "Vijayalakshmi", role: "Architect, Founder" },
-  { name: "Neilesh Datta", role: "Co-Founder" },
+  { name: "Neilesh Datta", role: "Architect,Co- founder" },
 ];
 
 const STATS = [
