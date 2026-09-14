@@ -23,6 +23,7 @@ export const SITE_CONFIG = {
   socialFacebook: "",
   homepageHeroImages: ["/images/hero/1.webp", "/images/hero/2.webp", "/images/hero/3.webp"],
   homepageStudioImage: "/images/homepage-studio.webp",
+  homepagePromoVideo: "/images/promovideo.mp4",
   aboutBannerImage: "/images/about/1.webp",
   portfolioBannerImage: "/images/portfolio/hero.webp",
   servicesBannerImage: "/images/services/hero.webp",

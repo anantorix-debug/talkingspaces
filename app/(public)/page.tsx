@@ -107,6 +107,30 @@ export default async function HomePage() {
         </Container>
       </section>
 
+      {/* SECTION 02B — PROMO VIDEO */}
+      <section className="relative flex min-h-[70vh] items-end overflow-hidden bg-teal-dark">
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          src={SITE_CONFIG.homepagePromoVideo}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="none"
+        />
+        <div className="absolute inset-0 bg-overlay" />
+        <Container className="relative z-10 pb-20 pt-40 text-paper">
+          <ImageReveal>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-cream">
+              Watch
+            </p>
+            <h2 className="max-w-2xl font-display text-4xl font-light leading-[1.1] tracking-[-0.02em] sm:text-5xl lg:text-6xl">
+              A Glimpse Into Our Work.
+            </h2>
+          </ImageReveal>
+        </Container>
+      </section>
+
       {/* SECTION 03 — FEATURED WORK */}
       <section className="bg-teal-light/40 py-32">
         <Container>
