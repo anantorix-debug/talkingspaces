@@ -10,7 +10,9 @@ export const projectSchema = z.object({
     .regex(/^[a-z0-9-]+$/, "Slug may only contain lowercase letters, numbers, and hyphens"),
   imageUrl: z.string().optional(),
   location: z.string().optional(),
-  year: optionalInt.nullable(),
+  year: optionalInt
+    .refine((y) => y === undefined || (y >= 1900 && y <= 2100), "Enter a valid year")
+    .nullable(),
   shortDescription: z.string().min(5, "Short description is required"),
   description: z.string().min(5, "Description is required"),
   featured: z.boolean().default(false),

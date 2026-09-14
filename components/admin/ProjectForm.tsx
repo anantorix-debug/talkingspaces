@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +12,7 @@ import { createProject, updateProject } from "@/app/actions/admin/projects";
 import { FormField, inputClass } from "@/components/admin/FormControls";
 import { ImagePicker } from "@/components/admin/ImagePicker";
 import { useToast } from "@/components/admin/ToastProvider";
+import { slugify } from "@/lib/slugify";
 
 export function ProjectForm({
   role,
@@ -31,6 +33,7 @@ export function ProjectForm({
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ProjectFormValues, unknown, ProjectInput>({
     resolver: zodResolver(projectSchema),
@@ -45,6 +48,11 @@ export function ProjectForm({
       ...defaultValues,
     },
   });
+
+  // Auto-fill the slug from the title while creating a new project, until the
+  // admin edits the slug field themselves — never on an existing project,
+  // since changing its slug would break already-published/shared URLs.
+  const [slugTouched, setSlugTouched] = useState(isEdit);
 
   const statusOptions = allowedNextStatuses(role, currentStatus ?? "DRAFT");
 
@@ -63,10 +71,26 @@ export function ProjectForm({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8" noValidate>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <FormField label="Title" htmlFor="title" error={errors.title?.message}>
-          <input id="title" className={inputClass} {...register("title")} />
+          <input
+            id="title"
+            className={inputClass}
+            {...register("title", {
+              onChange: (e) => {
+                if (!slugTouched) {
+                  setValue("slug", slugify(e.target.value), { shouldValidate: true });
+                }
+              },
+            })}
+          />
         </FormField>
         <FormField label="Slug" htmlFor="slug" error={errors.slug?.message} hint="lowercase-with-hyphens">
-          <input id="slug" className={inputClass} {...register("slug")} />
+          <input
+            id="slug"
+            className={inputClass}
+            {...register("slug", {
+              onChange: () => setSlugTouched(true),
+            })}
+          />
         </FormField>
 
         <FormField label="Location" htmlFor="location" error={errors.location?.message}>
