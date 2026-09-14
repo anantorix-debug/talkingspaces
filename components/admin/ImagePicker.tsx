@@ -10,7 +10,7 @@ import { useToast } from "@/components/admin/ToastProvider";
 // oversized file never reaches the network — the Server Action's own body
 // size limit crashes the request outright (not the app's graceful "too
 // large" response) if a file gets there uncaught.
-const MAX_UPLOAD_BYTES = 1 * 1024 * 1024;
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 
 export function ImagePicker({
   value,
@@ -28,7 +28,7 @@ export function ImagePicker({
 
   async function handleFile(file: File) {
     if (file.size > MAX_UPLOAD_BYTES) {
-      const message = "File is too large (max 1MB)";
+      const message = "File is too large (max 5MB)";
       setError(message);
       toast.error(message);
       return;

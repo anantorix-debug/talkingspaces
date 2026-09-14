@@ -17,10 +17,10 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       // Image uploads go through a Server Action (see app/actions/admin/upload.ts);
-      // its own MAX_UPLOAD_BYTES is 1MB. This must stay slightly above that so the
+      // its own MAX_UPLOAD_BYTES is 5MB. This must stay above that so the
       // app's friendly "too large" message can fire — multipart/form-data adds a
       // small amount of boundary/header overhead on top of the raw file bytes.
-      bodySizeLimit: "2mb",
+      bodySizeLimit: "6mb",
     },
   },
   async rewrites() {

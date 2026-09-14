@@ -23,7 +23,7 @@ export async function uploadImage(formData: FormData): Promise<UploadImageResult
     return { success: false, error: "Unsupported file type" };
   }
   if (file.size > MAX_UPLOAD_BYTES) {
-    return { success: false, error: "File is too large (max 1MB)" };
+    return { success: false, error: "File is too large (max 5MB)" };
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());

@@ -24,4 +24,4 @@ export const ALLOWED_MIME_TYPES = [
   "image/gif",
 ] as const;
 
-export const MAX_UPLOAD_BYTES = 1 * 1024 * 1024; // 1MB
+export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024; // 5MB
