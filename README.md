@@ -25,11 +25,12 @@ Production Next.js website + admin panel for Talking Spaces Interiors, backed by
    npx prisma db seed
    ```
 
-   The seed script checks `NODE_ENV`: outside of `production` it inserts the
-   full sample dataset (categories, projects, testimonials); in `production`
-   it only creates the roles and the master admin account, so `npx prisma db
-   seed` is safe to run once against the live database too — it never inserts
-   placeholder content there.
+   The seed script always creates the roles and the master admin account,
+   and never seeds Categories or Projects — that content is entered through
+   the admin panel only, on every environment. Outside of `production` it
+   additionally inserts a couple of sample testimonials; in `production` it
+   stops after the admin account, so `npx prisma db seed` is safe to run
+   once against the live database too.
 
 4. Run the dev server:
 
